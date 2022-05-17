@@ -1,33 +1,72 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { Datum, ResponseObject } from "./nerdcastResponse";
+import { useRef, useState } from "react";
+import { Podcast, PodcastReponse } from "./nerdcastResponse";
+import { useInfiniteQuery } from "react-query";
 import "./App.css"
+import React from "react";
 
+
+const getPodcasts = async ({ pageParam = 1 }) => {
+  const { data } = await axios.get<PodcastReponse>(`https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=20&page=${pageParam}`);
+  return data;
+}
 function App() {
-  const [state, setState] = useState<Datum[]>();
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get<ResponseObject>("https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true/");
-      setState(data.data);
-    })();
 
-  }, [])
-  if (!state) {
-    return <p>loading</p>
+  const {
+    data,
+    isLoading,
+    isError,
+    isSuccess,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage
+  } =
+    useInfiniteQuery('podcasts', getPodcasts, {
+      getNextPageParam: (lastPage, pages) => lastPage.page + 1,
+      select: (dataObj) => {
+        return {
+          ...dataObj, pages: dataObj.pages.map(page => {
+            return { ...page, data: page.data.slice(0, page.data.length - 1) }
+          })
+        }
+      },
+    });
+
+  if (isLoading || !isSuccess) {
+    return <p>loading...</p>
+  }
+  if (isError) {
+    return <p>error</p>
   }
 
   return (
-    <div style={{ maxWidth: "min(100%,1000px)", marginInline: "auto", display: "grid", gap: "10px" }}>
-      {state.map((post) => {
-        return <Post key={post.id} post={post} />
-      })}
-    </div>
+    <>
+      <div style={{ maxWidth: "min(100%,1000px)", marginInline: "auto", display: "grid", gap: "10px" }}>
+        {data.pages.map((group, i) => (
+          <React.Fragment key={i}>
+            {group.data.map(post => (
+              <Post key={post.id} post={post} />
+            ))}
+          </React.Fragment>
+        ))}
+      </div>
+      <button
+        onClick={() => fetchNextPage()}
+        disabled={!hasNextPage || isFetchingNextPage}
+      >
+        {isFetchingNextPage
+          ? 'Loading more...'
+          : hasNextPage
+            ? 'Load More'
+            : 'Nothing more to load'}
+      </button>
+    </>
   );
 }
 
 export default App;
 
-function Post({ post }: { post: Datum }) {
+function Post({ post }: { post: Podcast }) {
   const [showAudio, setShowAudio] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const skipTo = post["jump-to-time"]["end-time"];

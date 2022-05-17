@@ -1,5 +1,5 @@
-export interface ResponseObject {
-    data: Datum[];
+export interface PodcastReponse {
+    data: Podcast[];
     per_page: number;
     page: number;
     count: number;
@@ -9,7 +9,7 @@ export interface ResponseObject {
     orderby?: any;
 }
 
-export interface Datum {
+export interface Podcast {
     id: number;
     url: string;
     published_at: string;
