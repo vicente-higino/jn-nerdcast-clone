@@ -6,7 +6,6 @@ html, body {
 
 }
 
-
 h1, h2, h3, h4, h5, h6, p {
   margin: 0;
 }
@@ -16,29 +15,57 @@ h1, h2, h3, h4, h5, h6, p {
   min-height: 250px;
 }
 
-
 .grid-image, .grid-content {
   grid-column: 1/1;
   grid-row: 1 / 2;
 }
 
 .grid-content {
-  background: rgb(0,0,0);
-  background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.40129555240064774) 75%, rgba(0,0,0,0) 100%);
+  background: rgb(0, 0, 0);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.40129555240064774) 75%, rgba(0, 0, 0, 0) 100%);
   display: grid;
   padding: 30px 20px 10px 20px;
   gap: 10px;
   align-self: end;
 }
 
-
 .grid-image {
   width: 100%;
+  object-fit: cover;
 }
 
-@media screen and (max-width: 600px) {
+.posts {
+  max-width: min(100%, 1000px);
+  margin-inline: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.grid-image:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 700px) {
   .grid-image {
     width: 100%;
-    aspect-ratio: 1/1;
+    aspect-ratio: 9/12;
+  }
+
+  .posts {
+    grid-template-columns: auto;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .posts {
+    max-width: min(100%, 1200px);
+    grid-template-columns: auto auto;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .posts {
+    max-width: min(100%, 1500px);
+    grid-template-columns: auto auto auto;
   }
 }
