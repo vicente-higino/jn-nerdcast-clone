@@ -78,9 +78,12 @@ const Post = React.forwardRef<HTMLDivElement, { post: Podcast }>(({ post }, ref)
   }}>
     <img className="grid-image" src={post.image} alt={post.image_alt} />
     <div className="grid-content">
-      <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
-      <h3>{post.title}</h3>
-      <h5 style={{ color: "#b4b4b4" }}>{`${post.friendly_post_type} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
+      <div >
+        <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
+        <h3>{post.title}</h3>
+        <h5 style={{ color: "#b4b4b4" }}>{`${post.friendly_post_type} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
+      </div>
+      {showAudio && <audio ref={audioRef} style={{ alignSelf: "end", width: "100%" }} controls src={post.audio_high} autoPlay />}
     </div>
     {showAudio && showSkipButton && <button onClick={() => {
       if (audioRef.current) {
@@ -90,7 +93,6 @@ const Post = React.forwardRef<HTMLDivElement, { post: Podcast }>(({ post }, ref)
       }
     }}>Pular para {formatTime(skipTo)}</button>
     }
-    {showAudio && <audio ref={audioRef} style={{ alignSelf: "end" }} controls src={post.audio_high} autoPlay />}
   </div >;
 })
 
