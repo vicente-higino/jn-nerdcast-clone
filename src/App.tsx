@@ -1,28 +1,28 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Podcast, PodcastReponse } from "./nerdcastResponse";
 import { useInfiniteQuery } from "react-query";
 import "./App.css"
 import React from "react";
+import { useInView } from "react-intersection-observer";
 
 
 const getPodcasts = async ({ pageParam = 1 }) => {
-  const { data } = await axios.get<PodcastReponse>(`https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=20&page=${pageParam}`);
+  const { data } = await axios.get<PodcastReponse>(
+    `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=20&page=${pageParam}`);
   return data;
 }
 function App() {
-
+  const { ref, inView } = useInView({ triggerOnce: true, rootMargin: "300%" });
   const {
     data,
     isLoading,
     isError,
     isSuccess,
-    hasNextPage,
-    isFetchingNextPage,
     fetchNextPage
   } =
     useInfiniteQuery('podcasts', getPodcasts, {
-      getNextPageParam: (lastPage, pages) => lastPage.page + 1,
+      getNextPageParam: (lastPage) => lastPage.page + 1,
       select: (dataObj) => {
         return {
           ...dataObj, pages: dataObj.pages.map(page => {
@@ -31,6 +31,13 @@ function App() {
         }
       },
     });
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage])
+
 
   if (isLoading || !isSuccess) {
     return <p>loading...</p>
@@ -45,33 +52,23 @@ function App() {
         {data.pages.map((group, i) => (
           <React.Fragment key={i}>
             {group.data.map(post => (
-              <Post key={post.id} post={post} />
+              <Post key={post.id} post={post} ref={ref} />
             ))}
           </React.Fragment>
         ))}
       </div>
-      <button
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage || isFetchingNextPage}
-      >
-        {isFetchingNextPage
-          ? 'Loading more...'
-          : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
-      </button>
     </>
   );
 }
 
 export default App;
 
-function Post({ post }: { post: Podcast }) {
+const Post = React.forwardRef<HTMLDivElement, { post: Podcast }>(({ post }, ref) => {
   const [showAudio, setShowAudio] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const skipTo = post["jump-to-time"]["end-time"];
   const [showSkipButton, setShowSkipButton] = useState(skipTo > 0);
-  return <div className="grid" onClick={() => {
+  return <div ref={ref} className="grid" onClick={() => {
     const audio = audioRef.current;
     if (showAudio && audio && !showSkipButton) {
       audio.paused ? audio.play() : audio.pause();
@@ -95,7 +92,7 @@ function Post({ post }: { post: Podcast }) {
     }
     {showAudio && <audio ref={audioRef} style={{ alignSelf: "end" }} controls src={post.audio_high} autoPlay />}
   </div >;
-}
+})
 
 function formatTime(timeInSeconds: number): string {
   return new Date(timeInSeconds * 1000).toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
