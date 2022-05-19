@@ -2,11 +2,10 @@ import axios, { AxiosError } from "axios";
 import { useEffect } from "react";
 import { PodcastReponse } from "./nerdcastResponse";
 import { useInfiniteQuery } from "react-query";
-import React from "react";
 import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
 import { Post } from "./Post";
-
+import React from "react";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
   const { data } = await axios.get<PodcastReponse>(
@@ -14,12 +13,13 @@ const getPodcasts = async ({ pageParam = 1 }) => {
   return data;
 }
 
-function App() {
+function Posts() {
   const { ref, inView } = useInView({ rootMargin: "300%" });
   const {
     data,
     isError,
     isSuccess,
+    isLoading,
     isFetching,
     error,
     fetchNextPage,
@@ -55,6 +55,14 @@ function App() {
     return <p>{error.message}</p>
   }
 
+  if (isLoading) {
+    return <div className="posts">
+      {[...Array(30)].map((_, i) => {
+        return <Post key={i} />
+      })}
+    </div>
+  }
+
   if (!isSuccess) {
     return null;
   }
@@ -72,7 +80,7 @@ function App() {
   );
 }
 
-export default App;
+export default Posts;
 
 export function formatTime(timeInSeconds: number): string {
   return new Date(timeInSeconds * 1000).toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");

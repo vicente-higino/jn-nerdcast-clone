@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import "./App.css"
-import App from './App';
+import "./App.css";
+import Posts from './Posts';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'react-hot-toast';
 
@@ -16,7 +15,7 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Toaster position="bottom-left" />
-      <App />
+      <Posts />
     </QueryClientProvider>
 
   </React.StrictMode>

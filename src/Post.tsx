@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import { Podcast } from "./nerdcastResponse";
 import React from "react";
-import { formatTime } from "./App";
+import { formatTime } from "./Posts";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css'
 
-export const Post = React.forwardRef<HTMLDivElement, { post: Podcast; }>(({ post }, ref) => {
+export const Post = React.forwardRef<HTMLDivElement, { post?: Podcast }>(({ post }, ref) => {
   const [showAudio, setShowAudio] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const skipTo = post["jump-to-time"]["end-time"];
+  const skipTo = post ? post["jump-to-time"]["end-time"] : 0;
   const [showSkipButton, setShowSkipButton] = useState(skipTo > 0);
 
   const handleClick = () => {
@@ -26,6 +28,17 @@ export const Post = React.forwardRef<HTMLDivElement, { post: Podcast; }>(({ post
     }
   }
 
+  if (!post) {
+    return <div className="grid">
+      <Skeleton height={"100%"} baseColor="#6d6d6d" highlightColor="#858585" containerClassName="grid-image" />
+      <div className="grid-content">
+        <Skeleton baseColor="#434343" enableAnimation={false} width={radomPercentil(30, 50)} />
+        <Skeleton baseColor="#434343" enableAnimation={false} width={radomPercentil(45, 80)} />
+        <Skeleton baseColor="#434343" enableAnimation={false} width={radomPercentil(60, 75)} />
+      </div>
+    </div>
+  }
+
   return (
     <div ref={ref} className="grid" onClick={handleClick}>
       <img className="grid-image" src={post.image} alt={post.image_alt} />
@@ -42,3 +55,15 @@ export const Post = React.forwardRef<HTMLDivElement, { post: Podcast; }>(({ post
   )
 });
 
+
+
+const radomPercentil = (min: number, max: number): string => {
+  const n = Math.random() * 100;
+  if (n > max) {
+    return `${max}%`;
+  }
+  if (n < min) {
+    return `${min}%`;
+  }
+  return `${n}%`;
+}
