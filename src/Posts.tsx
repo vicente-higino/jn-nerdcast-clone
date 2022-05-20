@@ -57,9 +57,8 @@ function Posts() {
 
   if (isLoading) {
     return <div className="posts">
-      {[...Array(30)].map((_, i) => {
-        return <Post key={i} />
-      })}
+      {[...Array(30)].map((_, i) => <Post key={i} />
+      )}
     </div>
   }
 

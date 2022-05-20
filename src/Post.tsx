@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Podcast } from "./nerdcastResponse";
 import React from "react";
 import { formatTime } from "./Posts";
@@ -41,7 +41,7 @@ export const Post = React.forwardRef<HTMLDivElement, { post?: Podcast }>(({ post
 
   return (
     <div ref={ref} className="grid" onClick={handleClick}>
-      <img className="grid-image" src={post.image} alt={post.image_alt} />
+      <Image src={post.thumbnails["img-16x9-1210x544"]} alt={post.slug} />
       <div className="grid-content">
         <div>
           <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
@@ -55,6 +55,21 @@ export const Post = React.forwardRef<HTMLDivElement, { post?: Podcast }>(({ post
   )
 });
 
+
+export const Image: FC<{ src: string, alt: string }> = (props) => {
+  const [show, setShow] = useState(false);
+  const showImg = () => setShow(true);
+  return (
+    <>
+      {!show && <Skeleton
+        baseColor="#6d6d6d"
+        highlightColor="#858585"
+        height={"100%"} containerClassName="grid-image loading"
+      />}
+      <img className={`grid-image ${show ? "visible" : "hidden"}`} onLoad={showImg} {...props} />
+    </>
+  )
+}
 
 
 const radomPercentil = (min: number, max: number): string => {

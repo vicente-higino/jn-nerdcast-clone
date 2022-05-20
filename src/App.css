@@ -17,8 +17,10 @@ h3,
 h4,
 h5,
 h6,
-p {
+p,
+span {
   margin: 0;
+  line-height: 1;
 }
 
 .grid {
@@ -39,11 +41,24 @@ p {
   padding: 30px 20px 10px 20px;
   gap: 10px;
   align-self: end;
+  z-index: 1;
 }
 
 .grid-image {
   width: 100%;
   object-fit: cover;
+}
+
+.grid-image.loading {
+  background-color: #6d6d6d;
+}
+
+.grid-image.visible {
+  visibility: visible;
+}
+
+.grid-image.hidden {
+  visibility: hidden;
 }
 
 .posts {
