@@ -66,7 +66,7 @@ export const Image: FC<{ src: string, alt: string }> = (props) => {
         highlightColor="#858585"
         height={"100%"} containerClassName="grid-image loading"
       />}
-      <img className={`grid-image ${show ? "visible" : "hidden"}`} onLoad={showImg} {...props} />
+      <img className={`grid-image ${show ? "visible" : "hidden"}`} onLoad={showImg} src={props.src} alt={props.alt} />
     </>
   )
 }
