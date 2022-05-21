@@ -11,7 +11,7 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
     if (!post) {
       return <div className="grid">
         <Skeleton height={"100%"} baseColor="#6d6d6d" highlightColor="#858585" containerClassName="grid-image" />
-        <div className="grid-content">
+        <div className="grid-content--skeleton">
           <Skeleton baseColor="#434343" enableAnimation={false} width={radomPercentil(30, 50)} />
           <Skeleton baseColor="#434343" enableAnimation={false} width={radomPercentil(45, 80)} />
           <Skeleton baseColor="#434343" enableAnimation={false} width={radomPercentil(60, 75)} />
@@ -32,7 +32,7 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
     return <>
       {
         enableLink ?
-          <Link to={`/${post.slug}`} className="link-style">
+          <Link to={`/${post.product}/${post.slug}`} className="link-style">
             {PostBody}
           </Link> : PostBody
       }

@@ -29,12 +29,12 @@ span {
 }
 
 .grid-image,
-.grid-content {
+.grid-content, .grid-content--skeleton {
   grid-column: 1/1;
   grid-row: 1 / 2;
 }
 
-.grid-content {
+.grid-content, .grid-content--skeleton {
   background: rgb(0, 0, 0);
   background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.40129555240064774) 75%, rgba(0, 0, 0, 0) 100%);
   display: grid;
@@ -89,6 +89,7 @@ span {
   align-self: end;
   background: rgb(0, 0, 0);
   background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.40129555240064774) 75%, rgba(0, 0, 0, 0) 100%);
+  cursor: pointer;
 }
 
 .link-style {
@@ -96,6 +97,15 @@ span {
   color: unset;
 }
 
+.link {
+  text-decoration: none;
+  font-size: 2rem;
+  text-align: center;
+  color: white;
+  padding: 1rem;
+  background-color: #252525;
+  border-radius: 10px;
+}
 
 @media screen and (max-width: 700px) {
 

@@ -25,13 +25,6 @@ function Posts() {
   } =
     useInfiniteQuery<PodcastReponse, AxiosError>('podcasts', getPodcasts, {
       getNextPageParam: ({ page, pages }) => page < pages ? page + 1 : undefined,
-      select: (dataObj) => {
-        return {
-          ...dataObj, pages: dataObj.pages.map(page => {
-            return { ...page, data: page.data.slice(0, page.data.length - 1) }
-          })
-        }
-      },
       onError: (error) => toast.error(`Something went wrong: ${error.message}`),
     });
 
