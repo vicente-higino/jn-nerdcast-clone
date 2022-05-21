@@ -68,11 +68,37 @@ span {
   gap: 10px;
 }
 
-.grid-image:hover {
-  cursor: pointer;
+.post {
+  display: grid;
+  gap: 10px;
 }
 
+.post .grid-content {
+  grid-row: auto;
+}
+
+.skip-button {
+  all: unset;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 1rem;
+  font-size: 1.5rem;
+  grid-row: 1;
+  grid-column: 1;
+  align-self: end;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.40129555240064774) 75%, rgba(0, 0, 0, 0) 100%);
+}
+
+.link-style {
+  text-Decoration: none;
+  color: unset;
+}
+
+
 @media screen and (max-width: 700px) {
+
   .grid-image {
     width: 100%;
     aspect-ratio: 9/12;
@@ -88,11 +114,27 @@ span {
     max-width: min(100%, 1200px);
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .post {
+    max-width: min(100%, 1000px);
+    margin-inline: auto;
+  }
+
+  .link-style:focus-visible, .link-style:hover {
+    transform: scale(1.01);
+    outline: 2px solid white;
+  }
+
 }
 
 @media screen and (min-width: 2000px) {
   .posts {
     max-width: min(100%, 1500px);
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .post {
+    max-width: min(100%, 1500px);
+    margin-inline: auto;
   }
 }

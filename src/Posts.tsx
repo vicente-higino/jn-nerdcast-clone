@@ -20,12 +20,10 @@ function Posts() {
     isError,
     isSuccess,
     isLoading,
-    isFetching,
     error,
     fetchNextPage,
   } =
     useInfiniteQuery<PodcastReponse, AxiosError>('podcasts', getPodcasts, {
-      refetchOnWindowFocus: false,
       getNextPageParam: ({ page, pages }) => page < pages ? page + 1 : undefined,
       select: (dataObj) => {
         return {
@@ -42,14 +40,6 @@ function Posts() {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
-
-  useEffect(() => {
-    if (isFetching) {
-      toast.loading("loading...", { id: "loading" });
-    } else {
-      toast.dismiss("loading");
-    }
-  }, [isFetching]);
 
   if (isError) {
     return <p>{error.message}</p>
