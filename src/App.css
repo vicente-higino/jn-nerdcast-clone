@@ -39,7 +39,7 @@ span {
   background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.40129555240064774) 75%, rgba(0, 0, 0, 0) 100%);
   display: grid;
   padding: 30px 20px 10px 20px;
-  gap: 10px;
+  gap: 5px;
   align-self: end;
   z-index: 1;
 }

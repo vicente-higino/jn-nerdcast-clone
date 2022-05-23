@@ -22,11 +22,9 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
       <Image src={post.thumbnails["img-16x9-1210x544"]} alt={post.slug} />
       {children}
       <div className="grid-content">
-        <div>
-          <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
-          <h3>{post.title}</h3>
-          <h5 style={{ color: "#b4b4b4" }}>{`${post.product_name} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
-        </div>
+        <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
+        <h3>{post.title}</h3>
+        <h5 style={{ color: "#b4b4b4" }}>{`${post.product_name} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
       </div>
     </div>);
     return <>
