@@ -10,7 +10,7 @@ import { formatTime } from '../Posts';
 
 const getEpisode = async (episode: string) => {
     const { data } = await axios.get<Podcast[]>(
-        `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?search=${episode.replaceAll("-", " ")}`);
+        `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?search=${episode}`);
     if (data.length === 0) {
         throw new AxiosError("episode not found", "404");
 
@@ -25,7 +25,8 @@ export const Episode = () => {
     const post = queryClient.getQueryData<QueryCachePodcasts>('podcasts')?.pages
         .map(m => m.data)
         .reduce((elem1, elem2) => elem1.concat(elem2))?.find(post => post.slug === episode);
-    const { data, isError, error } = useQuery<Podcast | undefined, AxiosError>(["episode", episode], () => getEpisode(episode),
+    const { data, isError, error } = useQuery<Podcast | undefined, AxiosError>(["episode", episode], () =>
+        getEpisode(post?.title ?? episode.replaceAll("-", " ")),
         {
             initialData: post
         });
