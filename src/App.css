@@ -11,6 +11,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  margin-top: 10px;
+}
+
 h1,
 h2,
 h3,
@@ -26,12 +30,17 @@ span {
 .grid {
   display: grid;
   min-height: 250px;
+  position: relative;
+}
+
+.grid:hover>.post-description {
+  visibility: visible;
 }
 
 .grid-image,
-.grid-content, .grid-content--skeleton {
+.grid-content, .grid-content--skeleton, .post-description {
   grid-column: 1/1;
-  grid-row: 1 / 2;
+  grid-row: 1 / 1;
 }
 
 .grid-content, .grid-content--skeleton {
@@ -41,7 +50,22 @@ span {
   padding: 30px 20px 10px 20px;
   gap: 5px;
   align-self: end;
+}
+
+.grid-content--skeleton {
   z-index: 1;
+}
+
+.post-description {
+  visibility: hidden;
+  padding: 10px;
+  font-size: 1.5rem;
+  position: absolute;
+  overflow-y: auto;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(7.1px);
+  -webkit-backdrop-filter: blur(7.1px);
 }
 
 .grid-image {
@@ -90,6 +114,7 @@ span {
   background: rgb(0, 0, 0);
   background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.40129555240064774) 75%, rgba(0, 0, 0, 0) 100%);
   cursor: pointer;
+  z-index: 1;
 }
 
 .link-style {

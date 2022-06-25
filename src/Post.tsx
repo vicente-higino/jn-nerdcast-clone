@@ -18,23 +18,27 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
         </div>
       </div>
     }
-    const PostBody = (<div ref={ref} className="grid" >
-      <Image src={post.thumbnails["img-16x9-1210x544"]} alt={post.slug} />
-      {children}
-      <div className="grid-content">
-        <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
-        <h3>{post.title}</h3>
-        <h5 style={{ color: "#b4b4b4" }}>{`${post.product_name} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
+    const body = (
+      <div ref={ref} className="grid" >
+        <Image src={post.thumbnails["img-16x9-1210x544"]} alt={post.slug} />
+        {children}
+        <div className="grid-content">
+          <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
+          <h3>{post.title}</h3>
+          <h5 style={{ color: "#b4b4b4" }}>{`${post.product_name} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
+        </div>
+        <div className="post-description" dangerouslySetInnerHTML={{ __html: post.description }} />
       </div>
-    </div>);
-    return <>
-      {
-        enableLink ?
-          <Link to={`/${post.product}/${post.slug}`} className="link-style">
-            {PostBody}
-          </Link> : PostBody
-      }
-    </>
+    );
+
+    if (enableLink) {
+      return (
+        <Link to={`/${post.product}/${post.slug}`} className="link-style">
+          {body}
+        </Link>
+      );
+    }
+    return <>{body}</>;
   }
   );
 
