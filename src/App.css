@@ -31,9 +31,11 @@ span {
   display: grid;
   min-height: 250px;
   position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
-.grid:hover>.post-description {
+.link-style:focus-visible .post-description, .grid:hover>.post-description {
   visibility: visible;
 }
 
@@ -63,9 +65,8 @@ span {
   position: absolute;
   overflow-y: auto;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(7.1px);
-  -webkit-backdrop-filter: blur(7.1px);
+  backdrop-filter: blur(10px) brightness(0.5);
+  -webkit-backdrop-filter: blur(10px) brightness(0.5);
 }
 
 .grid-image {
@@ -153,11 +154,6 @@ span {
   .post {
     max-width: min(100%, 1000px);
     margin-inline: auto;
-  }
-
-  .link-style:focus-visible, .link-style:hover {
-    transform: scale(1.01);
-    outline: 2px solid white;
   }
 
 }
