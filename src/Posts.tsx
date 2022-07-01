@@ -1,3 +1,4 @@
+import React from "react";
 import axios, { AxiosError } from "axios";
 import { FC, useEffect, useRef, useState } from "react";
 import { PodcastReponse } from "./nerdcastResponse";
@@ -5,7 +6,7 @@ import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
 import { Post } from "./Post";
-import React from "react";
+import { FilterIcon } from "./icons/FilterIcon";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
   const { data } = await axios.get<PodcastReponse>(
@@ -80,14 +81,14 @@ function Posts() {
 export default Posts;
 
 export const FilterButton: FC<{ filterItems: string[] }> = ({ filterItems }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const divRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
   return (
-    <button ref={buttonRef} className="filter-button" aria-expanded={expanded} onClick={(e) => {
-      if (e.target === buttonRef.current)
-        setExpanded(!expanded)
+    <button className="filter-button" aria-expanded={expanded} onClick={(e) => {
+      if (!divRef.current?.contains(e.target as Node)) setExpanded(!expanded);
     }}>
-      <div style={{ display: expanded ? "block" : "none", fontSize: "1.5rem" }}>
+      <FilterIcon style={{ width: "65%", margin: "auto" }} />
+      <div ref={divRef} className="modal">
         <h3 style={{ textAlign: "center" }}>Filter</h3>
         {filterItems.map((n) =>
           <FilterItem name={n} key={n} />
@@ -99,7 +100,7 @@ export const FilterButton: FC<{ filterItems: string[] }> = ({ filterItems }) => 
 
 const FilterItem: FC<{ name: string }> = ({ name }) => {
   const checkBoxRef = useRef<HTMLInputElement>(null);
-  const [checkState, setCheckState] = useState(false);
+  const [checkState, setCheckState] = useState(true);
   return <div className="filter-item" onClick={() => setCheckState(!checkState)} data-checked={checkState}>
     <input ref={checkBoxRef} type="checkbox" checked={checkState} onChange={(e) => setCheckState(e.target.checked)} />
     <label>{name}</label>
