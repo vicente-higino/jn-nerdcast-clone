@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 import { queryClient } from '..';
 import { Podcast, PodcastReponse } from '../nerdcastResponse';
 import { Post } from '../Post';
-import { formatTime } from '../Posts';
+import { formatTime } from "../utils";
 
 const getEpisode = async (episode: string) => {
     const { data } = await axios.get<Podcast[]>(
@@ -25,11 +25,8 @@ export const Episode = () => {
     const post = queryClient.getQueryData<QueryCachePodcasts>('podcasts')?.pages
         .map(m => m.data)
         .reduce((elem1, elem2) => elem1.concat(elem2))?.find(post => post.slug === episode);
-    const { data, isError, error } = useQuery<Podcast | undefined, AxiosError>(["episode", episode], () =>
-        getEpisode(post?.title ?? episode.replaceAll("-", " ")),
-        {
-            initialData: post
-        });
+    const { data, isError, error } = useQuery<Podcast | undefined, AxiosError>(["episode", episode],
+        () => post ? Promise.resolve(post) : getEpisode(episode.replaceAll("-", " ")));
     const [showSkipButton, setShowSkipButton] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
     const skipTo = useRef(0);

@@ -94,7 +94,8 @@ span {
   right: 0;
   transform: translateY(calc(-100% - 10px)) scaleY(1);
   word-break: break-word;
-  min-width: max-content;
+  min-width: 6rem;
+  width: max-content;
   max-width: 15rem;
   max-height: 50vh;
   overflow: auto;

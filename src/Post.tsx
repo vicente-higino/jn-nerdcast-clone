@@ -1,12 +1,12 @@
 import { FC, PropsWithChildren, useRef, useState } from "react";
 import { Podcast } from "./nerdcastResponse";
-import React from "react";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Link } from "react-router-dom";
+import { radomPercentil } from "./utils";
 
-export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: Podcast, enableLink?: boolean }>>
-  (({ children, post, enableLink = true }, ref) => {
+export const Post: FC<PropsWithChildren<{ post?: Podcast, enableLink?: boolean, }>> =
+  (({ children, post, enableLink = true }) => {
 
     if (!post) {
       return <div className="grid">
@@ -19,7 +19,7 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
       </div>
     }
     const body = (
-      <div ref={ref} className="grid" >
+      <div className="grid">
         <Image src={post.thumbnails["img-16x9-1210x544"]} alt={post.slug} />
         {children}
         <div className="grid-content">
@@ -28,7 +28,7 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
           <h5 style={{ color: "#b4b4b4" }}>{`${post.product_name} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
         </div>
         <div className="post-description" dangerouslySetInnerHTML={{ __html: post.description }} />
-      </div>
+      </div >
     );
 
     if (enableLink) {
@@ -42,7 +42,7 @@ export const Post = React.forwardRef<HTMLDivElement, PropsWithChildren<{ post?: 
   }
   );
 
-export const Image: FC<{ src: string, alt: string }> = (props) => {
+export const Image: FC<{ src: string, alt: string, }> = (props) => {
   const [show, setShow] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const showImg = () => setShow(true);
@@ -57,16 +57,4 @@ export const Image: FC<{ src: string, alt: string }> = (props) => {
       <img ref={imgRef} className={`grid-image ${show ? "visible" : "hidden"}`} onLoad={showImg} src={props.src} alt={props.alt} />
     </>
   )
-}
-
-
-const radomPercentil = (min: number, max: number): string => {
-  const n = Math.random() * 100;
-  if (n > max) {
-    return `${max}%`;
-  }
-  if (n < min) {
-    return `${min}%`;
-  }
-  return `${n}%`;
 }

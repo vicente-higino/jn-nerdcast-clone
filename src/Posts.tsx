@@ -1,22 +1,33 @@
-import React from "react";
+import React, { useCallback } from "react";
 import axios, { AxiosError } from "axios";
-import { FC, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { PodcastReponse } from "./nerdcastResponse";
 import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
 import { Post } from "./Post";
-import { FilterIcon } from "./icons/FilterIcon";
+import { FilterItemsDict, FilterButton } from "./FilterButton";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
   const { data } = await axios.get<PodcastReponse>(
-    `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=20&page=${pageParam}`);
+    `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=30&page=${pageParam}`);
   return data;
 }
 
+const defaultFilter: FilterItemsDict = {
+  "Caneca de Mamicas": true,
+  "Empreendedor": true,
+  "Generacast": true,
+  "Lá do Bunker": true,
+  "NerdCash": true,
+  "NerdCast": true,
+  "NerdTech": true,
+  "Papo de Parceiro": true
+};
+
 function Posts() {
-  const { ref, inView } = useInView({ rootMargin: "300%" });
-  const [filterItems, setFilterItems] = useState<string[]>([]);
+  const { ref, inView } = useInView({ rootMargin: "200%" });
+  const [filter, setFilter] = useState<FilterItemsDict>(defaultFilter);
   const {
     data,
     isError,
@@ -35,18 +46,25 @@ function Posts() {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
+
   useEffect(() => {
-    if (isSuccess) {
-      const items: string[] = [];
+    if (data) {
       for (const page of data.pages) {
-        for (const p of page.data) {
-          !items.includes(p.product_name) && items.push(p.product_name);
+        for (const post of page.data) {
+          setFilter((prev) => {
+            return { ...prev, [post.product_name]: prev[post.product_name] ?? true }
+          });
         }
       }
-      items.sort();
-      setFilterItems(items);
     }
-  }, [isSuccess, data]);
+  }, [data]);
+
+  const onChangeItems = useCallback(
+    (items: FilterItemsDict) => {
+      setFilter(items);
+    },
+    [],
+  )
 
   if (isError) {
     return <p>{error.message}</p>
@@ -54,8 +72,7 @@ function Posts() {
 
   if (isLoading) {
     return <div className="posts">
-      {[...Array(30)].map((_, i) => <Post key={i} />
-      )}
+      {[...Array(30)].map((_, i) => <Post key={i} />)}
     </div>
   }
 
@@ -67,46 +84,19 @@ function Posts() {
     <div className="posts">
       {data.pages.map((group, i) => (
         <React.Fragment key={i}>
-          {group.data.map(post => (
-            <Post key={post.id} post={post} ref={ref} />
+          {group.data.flatMap((post, j) => (
+            filter[post.product_name] ? <Post
+              key={post.id}
+              post={post}
+            /> : null
           ))}
         </React.Fragment>
       ))}
     </div>
-    <FilterButton filterItems={filterItems} />
+    <div ref={ref} />
+    <FilterButton filterItems={filter} onChangeItems={onChangeItems} />
   </>
   );
 }
 
 export default Posts;
-
-export const FilterButton: FC<{ filterItems: string[] }> = ({ filterItems }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <button className="filter-button" aria-expanded={expanded} onClick={(e) => {
-      if (!divRef.current?.contains(e.target as Node)) setExpanded(!expanded);
-    }}>
-      <FilterIcon style={{ width: "65%", margin: "auto" }} />
-      <div ref={divRef} className="modal">
-        <h3 style={{ textAlign: "center" }}>Filter</h3>
-        {filterItems.map((n) =>
-          <FilterItem name={n} key={n} />
-        )}
-      </div>
-    </button>
-  )
-}
-
-const FilterItem: FC<{ name: string }> = ({ name }) => {
-  const checkBoxRef = useRef<HTMLInputElement>(null);
-  const [checkState, setCheckState] = useState(true);
-  return <div className="filter-item" onClick={() => setCheckState(!checkState)} data-checked={checkState}>
-    <input ref={checkBoxRef} type="checkbox" checked={checkState} onChange={(e) => setCheckState(e.target.checked)} />
-    <label>{name}</label>
-  </div>;
-}
-
-export function formatTime(timeInSeconds: number): string {
-  return new Date(timeInSeconds * 1000).toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
-}
