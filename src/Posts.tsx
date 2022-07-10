@@ -6,17 +6,17 @@ import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
 import { Post } from "./Post";
 import { FilterItemsDict, FilterButton } from "./FilterButton";
-import { useFilterContext } from "./App";
+import { useFilter } from "./FilterContext";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
   const { data } = await axios.get<PodcastReponse>(
-    `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=30&page=${pageParam}`);
+    `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=50&page=${pageParam}`);
   return data;
 }
 
 function Posts() {
-  const { ref, inView } = useInView({ rootMargin: "200% 200% 200% 200%" });
-  const { filter, setFilter } = useFilterContext();
+  const { ref, inView } = useInView({ rootMargin: "500px" });
+  const { filter, setFilter } = useFilter();
   const {
     data,
     isError,
