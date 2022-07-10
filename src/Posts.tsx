@@ -1,12 +1,12 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import axios, { AxiosError } from "axios";
-import { useEffect, useState } from "react";
 import { PodcastReponse } from "./nerdcastResponse";
 import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
 import { Post } from "./Post";
 import { FilterItemsDict, FilterButton } from "./FilterButton";
+import { useFilterContext } from "./App";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
   const { data } = await axios.get<PodcastReponse>(
@@ -14,20 +14,9 @@ const getPodcasts = async ({ pageParam = 1 }) => {
   return data;
 }
 
-const defaultFilter: FilterItemsDict = {
-  "Caneca de Mamicas": true,
-  "Empreendedor": true,
-  "Generacast": true,
-  "Lá do Bunker": true,
-  "NerdCash": true,
-  "NerdCast": true,
-  "NerdTech": true,
-  "Papo de Parceiro": true
-};
-
 function Posts() {
-  const { ref, inView } = useInView({ rootMargin: "200%" });
-  const [filter, setFilter] = useState<FilterItemsDict>(defaultFilter);
+  const { ref, inView } = useInView({ rootMargin: "200% 200% 200% 200%" });
+  const { filter, setFilter } = useFilterContext();
   const {
     data,
     isError,
@@ -57,13 +46,13 @@ function Posts() {
         }
       }
     }
-  }, [data]);
+  }, [data, setFilter]);
 
   const onChangeItems = useCallback(
     (items: FilterItemsDict) => {
       setFilter(items);
     },
-    [],
+    [setFilter],
   )
 
   if (isError) {

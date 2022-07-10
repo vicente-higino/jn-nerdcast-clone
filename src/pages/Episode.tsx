@@ -3,7 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { Link, useParams } from 'react-router-dom'
-import { queryClient } from '..';
+import { queryClient } from '../App';
 import { Podcast, PodcastReponse } from '../nerdcastResponse';
 import { Post } from '../Post';
 import { formatTime } from "../utils";
@@ -13,7 +13,6 @@ const getEpisode = async (episode: string) => {
         `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?search=${episode}`);
     if (data.length === 0) {
         throw new AxiosError("episode not found", "404");
-
     }
     return data[0];
 }
