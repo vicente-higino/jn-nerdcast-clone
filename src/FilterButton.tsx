@@ -1,29 +1,17 @@
-import React, { useCallback } from "react";
+import  { useCallback } from "react";
 import { FC, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useFilter } from "./FilterContext";
 import { FilterIcon } from "./icons/FilterIcon";
 
 export type FilterItemsDict = { [key: string]: boolean; };
 
-export const FilterButton: FC<{
-  filterItems: FilterItemsDict;
-  onChangeItems: (items: FilterItemsDict) => void;
-}> = ({ filterItems, onChangeItems }) => {
+export const FilterButton: FC<{}> = () => {
   const divRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [expanded, setExpanded] = useState(false);
-  const items = useRef<FilterItemsDict>(filterItems);
+  const { filter } = useFilter();
 
-  useEffect(() => {
-    items.current = filterItems;
-  }, [filterItems])
-
-  const onChange = useCallback(
-    (r: boolean, n: string) => {
-      items.current = { ...items.current, [n]: r };
-      onChangeItems(items.current);
-    },
-    [onChangeItems]
-  );
 
   const clickOutside: EventListener = useCallback(
     (e) => {
@@ -49,25 +37,31 @@ export const FilterButton: FC<{
       <FilterIcon style={{ width: "50%", margin: "auto" }} />
       <div ref={divRef} className="modal">
         <h3 style={{ textAlign: "center" }}>Filter</h3>
-        {Object.keys(items.current)
+        {Object.keys(filter)
           .sort()
           .map((n) =>
-            <FilterItem name={n} key={n} checked={items.current[n]} onChange={onChange} />
+            <FilterItem name={n} key={n} />
           )}
       </div>
     </button>
   );
 };
-const FilterItem: FC<{ name: string; checked?: boolean; onChange: (result: boolean, name: string) => void; }> = ({ name, checked, onChange }) => {
+const FilterItem: FC<{ name: string; }> = ({ name, }) => {
   const checkBoxRef = useRef<HTMLInputElement>(null);
-  const [checkState, setCheckState] = useState(checked ?? true);
+  const { filter, setFilter } = useFilter();
 
-  useEffect(() => {
-    onChange(checkState, name);
-  }, [checkState, name, onChange]);
+  const checkIfHasAtLeastOneCheked = (value: boolean) => {
+    const trueTotal = Object.values(filter).reduce((prev, curr) => curr ? prev + 1 : prev, 0)
+    if (trueTotal > 1 || value) {
+      setFilter(prev => { return { ...prev, [name]: value } });
+      toast.dismiss("filterErrorMessage");
+    } else {
+      toast.error("At least one must be selected", { position: "bottom-right", id: "filterErrorMessage", duration: 2000 });
+    };
+  }
 
-  return <div className="filter-item" onClick={() => setCheckState(!checkState)} data-checked={checkState}>
-    <input ref={checkBoxRef} type="checkbox" checked={checkState} onChange={(e) => setCheckState(e.target.checked)} />
+  return <div className="filter-item" onClick={() => checkIfHasAtLeastOneCheked(!filter[name])} data-checked={filter[name]}>
+    <input ref={checkBoxRef} type="checkbox" checked={filter[name]} onChange={(e) => checkIfHasAtLeastOneCheked(e.target.checked)} />
     <label>{name}</label>
   </div>;
 };

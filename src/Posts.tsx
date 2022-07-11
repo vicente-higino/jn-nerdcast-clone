@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { PodcastReponse } from "./nerdcastResponse";
 import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
 import { Post } from "./Post";
-import { FilterItemsDict, FilterButton } from "./FilterButton";
+import { FilterButton } from "./FilterButton";
 import { useFilter } from "./FilterContext";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
@@ -48,13 +48,6 @@ function Posts() {
     }
   }, [data, setFilter]);
 
-  const onChangeItems = useCallback(
-    (items: FilterItemsDict) => {
-      setFilter(items);
-    },
-    [setFilter],
-  )
-
   if (isError) {
     return <p>{error.message}</p>
   }
@@ -83,7 +76,7 @@ function Posts() {
       ))}
     </div>
     <div ref={ref} />
-    <FilterButton filterItems={filter} onChangeItems={onChangeItems} />
+    <FilterButton />
   </>
   );
 }
