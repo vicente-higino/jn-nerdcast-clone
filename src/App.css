@@ -70,6 +70,18 @@ span {
   -webkit-backdrop-filter: blur(10px) brightness(0.5);
 }
 
+.filter-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.5rem;
+  background-color: #0075ff;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
 .filter-button {
   all: unset;
   display: flex;
@@ -100,7 +112,6 @@ span {
   max-height: 50vh;
   overflow: auto;
   background-color: #252525;
-  padding: 0.5rem 0;
   border-radius: 1rem;
   transition: transform 0.25s ease;
   transform-origin: bottom;
@@ -122,7 +133,7 @@ span {
   cursor: pointer;
 }
 
-.filter-item * {
+.filter-item *, button {
   cursor: pointer;
 }
 

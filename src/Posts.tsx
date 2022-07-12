@@ -16,7 +16,7 @@ const getPodcasts = async ({ pageParam = 1 }) => {
 
 function Posts() {
   const { ref, inView } = useInView({ rootMargin: "500px" });
-  const { filter, setFilter } = useFilter();
+  const { filter, dispatch } = useFilter();
   const {
     data,
     isError,
@@ -40,13 +40,11 @@ function Posts() {
     if (data) {
       for (const page of data.pages) {
         for (const post of page.data) {
-          setFilter((prev) => {
-            return { ...prev, [post.product_name]: prev[post.product_name] ?? true }
-          });
+          dispatch({ type: "ADD_FILTER", payload: post.product_name });
         }
       }
     }
-  }, [data, setFilter]);
+  }, [data, dispatch]);
 
   if (isError) {
     return <p>{error.message}</p>
@@ -81,4 +79,4 @@ function Posts() {
   );
 }
 
-export default Posts;
+export default Posts
