@@ -100,11 +100,9 @@ span {
   cursor: pointer;
 }
 
-
-.filter-button>.modal {
-  position: absolute;
-  right: 0;
-  transform: translateY(calc(-100% - 10px)) scaleY(1);
+.modal {
+  position: fixed;
+  transform: translate(-100%, calc(-100% - 10px)) scaleY(1);
   word-break: break-word;
   min-width: 6rem;
   width: max-content;
@@ -115,11 +113,11 @@ span {
   border-radius: 1rem;
   transition: transform 0.25s ease;
   transform-origin: bottom;
-  cursor: default;
+  z-index: 999;
 }
 
-.filter-button[aria-expanded=false]>.modal {
-  transform: translateY(calc(-100% - 10px)) scaleY(0);
+.modal[aria-expanded=false] {
+  transform: translate(-100%, calc(-100% - 10px)) scaleY(0);
 }
 
 .filter-item {

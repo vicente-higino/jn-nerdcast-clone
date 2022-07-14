@@ -1,4 +1,4 @@
-import { FilterItemsDict } from "./FilterButton";
+import { FilterItemsDict } from "./FilterContext";
 
 export function formatTime(timeInSeconds: number): string {
   return new Date(timeInSeconds * 1000).toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
@@ -21,4 +21,12 @@ export function countTrueValues(filter: FilterItemsDict): number {
 
 export function checkIfAllFiltersAreTrue(filter: FilterItemsDict) {
   return Object.values(filter).length === countTrueValues(filter);
+}
+
+export function isFilterItemsDict(obj: object): obj is FilterItemsDict {
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof key !== "string" || typeof value !== "boolean")
+      return false;
+  }
+  return true;
 }
