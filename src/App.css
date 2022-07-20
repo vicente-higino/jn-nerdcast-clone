@@ -1,3 +1,24 @@
+:root {
+  /* --primary-100: #3BB4B4;
+  --primary-200: #324B4B;
+  --primary-300: #95B1B0;
+  --primary-400: #94A1DE;
+  --primary-500: #5E6DA6; */
+  --primary-100: #3BB4B4;
+  --primary-200: #009090;
+  --primary-300: #006D6E;
+  --primary-400: #004C4E;
+  --primary-500: #002D2F;
+  --secundary-100: #7072BC;
+  --secundary-200: #5559A0;
+  --secundary-300: #3A4285;
+  --secundary-400: #1D2B6B;
+  --secundary-500: #001752;
+
+
+}
+
+
 html,
 body {
   margin: 0;
@@ -71,14 +92,15 @@ span {
 }
 
 .filter-header {
-  display: flex;
   position: sticky;
   top: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+  place-content: center;
   z-index: 1;
   padding: 0.5rem;
-  background-color: #0075ff;
-  flex-direction: column;
-  align-items: center;
+  background-color: var(--primary-300);
   gap: 5px;
 }
 
@@ -92,9 +114,8 @@ span {
   width: 4rem;
   aspect-ratio: 1/1;
   border-radius: 100%;
-  background-color: #252525;
+  background-color: var(--primary-300);
   box-shadow: 1px 2px 15px 0px #000;
-  transition: all 0.5s ease-in;
   z-index: 999;
   word-wrap: break-word;
   cursor: pointer;
@@ -102,32 +123,27 @@ span {
 
 .modal {
   position: fixed;
-  transform: translate(-100%, calc(-100% - 10px)) scaleY(1);
   word-break: break-word;
   min-width: 6rem;
   width: max-content;
   max-width: 15rem;
   max-height: 50vh;
   overflow: auto;
-  background-color: #252525;
+  overflow-x: hidden;
+  background-color: var(--secundary-100);
   border-radius: 1rem;
-  transition: transform 0.25s ease;
-  transform-origin: bottom;
+  opacity: 0;
   z-index: 999;
-}
-
-.modal[aria-expanded=false] {
-  transform: translate(-100%, calc(-100% - 10px)) scaleY(0);
 }
 
 .filter-item {
   display: flex;
   gap: 10px;
   align-items: center;
-  border-block: solid 2px #525252;
   padding: 0.85rem 0.65rem;
-  background-color: #252525;
-  margin-block: 1rem;
+  background-color: var(--primary-300);
+  border-radius: 10px;
+  margin: 1rem;
   cursor: pointer;
 }
 
@@ -135,12 +151,18 @@ span {
   cursor: pointer;
 }
 
-.filter-item:hover, .filter-item[data-checked=true] {
-  background-color: #3d3d3d;
+.filter-item[data-checked=true] {
+  background-color: var(--secundary-400);
+  accent-color: var(--primary-200);
 }
 
 .filter-item>input[type="checkbox"] {
   transform: scale(1.5);
+}
+
+button {
+  all: unset;
+  cursor: pointer;
 }
 
 .grid-image {
