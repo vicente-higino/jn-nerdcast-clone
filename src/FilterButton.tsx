@@ -20,7 +20,6 @@ export const FilterButton: FC<{}> = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [expanded, setExpanded] = useState(false);
   const { filter } = useFilter();
-  const [modalPosition, setModalPosition] = useState<{ top: number, left: number }>({ top: 0, left: 0 });
 
   const clickOutside: EventListener = useCallback(
     (e) => {
@@ -28,16 +27,6 @@ export const FilterButton: FC<{}> = () => {
         setExpanded(false);
     },
     [setExpanded],
-  )
-  const updateModalPosition = useCallback(
-    () => {
-      if (buttonRef.current && modalRef.current) {
-        const { x, y, width: widthButton } = buttonRef.current.getBoundingClientRect();
-        const { height, width: widthModal } = modalRef.current.getBoundingClientRect();
-        setModalPosition({ top: y - height - 10, left: x - widthModal + widthButton });
-      }
-    },
-    [setModalPosition],
   )
 
   useEffect(() => {
@@ -48,35 +37,41 @@ export const FilterButton: FC<{}> = () => {
   }, [clickOutside])
 
   useEffect(() => {
-    updateModalPosition();
-    window.addEventListener("resize", updateModalPosition);
-    return () => {
-      window.removeEventListener("resize", updateModalPosition);
+    if (expanded) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
     }
-  }, [updateModalPosition])
+  }, [expanded])
+
 
   return (<>
-    <motion.button whileTap={{ scale: 0.9, transition: { duration: 0.1 } }} ref={buttonRef} className="filter-button" onClick={() => {
-      setExpanded(prev => !prev);
-      updateModalPosition();
-    }}>
+    <motion.button
+      style={expanded ? { display: "none" } : {}}
+      whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
+      ref={buttonRef}
+      className="filter-button"
+      onClick={() => setExpanded(prev => !prev)}>
       <FilterIcon style={{ width: "50%", margin: "auto" }} />
     </motion.button>
     <motion.div
-      style={{ ...modalPosition }}
-      animate={expanded ? { x: "0", opacity: 1 } : { x: 400, opacity: 0 }}
-      transition={{ duration: 1, bounce: 0.5, type: "spring", delayChildren: 10 }}
-      className="modal"
-      ref={modalRef}>
-      <div className="filter-header">
-        <h3 style={{ gridColumn: 2 }}>Filter</h3>
-        <SelectAllButton />
-      </div>
-      <motion.div initial="hidden" whileInView="visible">
-        {sortFilter(filter)
-          .map((n, i) =>
-            <FilterItem name={n[0]} key={n[0]} index={i} />
-          )}
+      className="modal-parent"
+      animate={expanded ? { opacity: 1, } : { opacity: 0, pointerEvents: "none" }}>
+      <motion.div
+        animate={expanded ? { x: "0", opacity: 1 } : { x: 400, opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="modal"
+        ref={modalRef}>
+        <div className="filter-header">
+          <h3 style={{ gridColumn: 2 }}>Filter</h3>
+          <SelectAllButton />
+        </div>
+        <motion.div initial="hidden" whileInView="visible">
+          {sortFilter(filter)
+            .map((n, i) =>
+              <FilterItem name={n[0]} key={n[0]} index={i} />
+            )}
+        </motion.div>
       </motion.div>
     </motion.div>
   </>
@@ -110,14 +105,13 @@ const FilterItem: FC<{ name: string; index: number; }> = ({ name, index }) => {
 
   return <motion.div
     whileTap={{ scale: .9 }}
-    whileHover={{ scale: 1.1 }}
+    whileHover={{ scale: 1.1, transition: { duration: 0.1 } }}
     variants={item}
     className="filter-item" onClick={() => checkIfHasAtLeastOneCheked(!filter[name])} data-checked={filter[name]}>
     <input ref={checkBoxRef} type="checkbox" checked={filter[name]} onChange={(e) => checkIfHasAtLeastOneCheked(e.target.checked)} />
     <label>{name}</label>
   </motion.div>;
 };
-
 
 export const SelectAllButton = () => {
   const { filter, dispatch } = useFilter();
