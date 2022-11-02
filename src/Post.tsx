@@ -1,11 +1,11 @@
 import { FC, PropsWithChildren, useRef, useState } from "react";
-import { Podcast } from "./nerdcastResponse";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Link } from "react-router-dom";
-import { radomPercentil } from "./utils";
+import { formatDuration, radomPercentil, } from "./utils";
+import { PostProps } from "./Types";
 
-export const Post: FC<PropsWithChildren<{ post?: Podcast, enableLink?: boolean, }>> =
+export const Post: FC<PropsWithChildren<{ post?: PostProps, enableLink?: boolean, }>> =
   (({ children, post, enableLink = true }) => {
 
     if (!post) {
@@ -20,12 +20,12 @@ export const Post: FC<PropsWithChildren<{ post?: Podcast, enableLink?: boolean, 
     }
     const body = (
       <div className="grid">
-        <Image src={post.thumbnails["img-16x9-1210x544"]} alt={post.slug} />
+        <Image src={post.image} alt={post.slug} />
         {children}
         <div className="grid-content">
           <h4 style={{ color: "#3bb4b4" }}>{`${post.product_name} ${post.episode}`}</h4>
           <h3>{post.title}</h3>
-          <h5 style={{ color: "#b4b4b4" }}>{`${post.product_name} • ${post.friendly_post_date} • ${post.friendly_post_time}`}</h5>
+          <h5 style={{ color: "#b4b4b4" }}>{format(post)}</h5>
         </div>
         <div className="post-description" dangerouslySetInnerHTML={{ __html: post.description }} />
       </div >
@@ -33,7 +33,7 @@ export const Post: FC<PropsWithChildren<{ post?: Podcast, enableLink?: boolean, 
 
     if (enableLink) {
       return (
-        <Link to={`/${post.product}/${post.slug}`} className="link-style">
+        <Link to={`/${post.product}/${post.slug}/${post.id}`} className="link-style">
           {body}
         </Link>
       );
@@ -58,3 +58,10 @@ export const Image: FC<{ src: string, alt: string, }> = (props) => {
     </>
   )
 }
+function format(post: PostProps) {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  const date = new Date(post.published_at).toLocaleDateString(undefined, options);
+  const time = formatDuration(post.duration);
+  return `${post.product_name} • ${date} • ${time}`;
+}
+

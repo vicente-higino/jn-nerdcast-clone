@@ -15,7 +15,7 @@ export const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<Feed />} />
-            <Route path="/:nome/:episode" element={<Episode />} />
+            <Route path="/:nome/:episode/:id" element={<Episode />} />
             <Route path="*" element={<Navigate to={"/"} />} />
           </Routes>
         </Router>

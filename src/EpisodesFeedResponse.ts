@@ -1,5 +1,5 @@
-export interface PodcastReponse {
-    data: Podcast[];
+export interface EpisodesFeedReponse {
+    data: Post[];
     per_page: number;
     page: number;
     count: number;
@@ -9,7 +9,7 @@ export interface PodcastReponse {
     orderby?: any;
 }
 
-export interface Podcast {
+export interface Post {
     id: number;
     url: string;
     published_at: string;

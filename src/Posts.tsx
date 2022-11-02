@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import axios, { AxiosError } from "axios";
-import { PodcastReponse } from "./nerdcastResponse";
+import { EpisodesFeedReponse } from "./EpisodesFeedResponse";
 import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import toast from 'react-hot-toast';
@@ -9,7 +9,7 @@ import { FilterButton } from "./FilterButton";
 import { useFilter } from "./FilterContext";
 
 const getPodcasts = async ({ pageParam = 1 }) => {
-  const { data } = await axios.get<PodcastReponse>(
+  const { data } = await axios.get<EpisodesFeedReponse>(
     `https://jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/?paginated=true&per_page=50&page=${pageParam}`);
   return data;
 }
@@ -25,7 +25,7 @@ function Posts() {
     error,
     fetchNextPage,
   } =
-    useInfiniteQuery<PodcastReponse, AxiosError>('podcasts', getPodcasts, {
+    useInfiniteQuery<EpisodesFeedReponse, AxiosError>('podcasts', getPodcasts, {
       getNextPageParam: ({ page, pages }) => page < pages ? page + 1 : undefined,
       onError: (error) => toast.error(`Something went wrong: ${error.message}`),
     });
