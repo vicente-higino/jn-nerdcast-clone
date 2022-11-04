@@ -9,7 +9,7 @@ import { formatTime } from "../utils";
 
 const getEpisode = async (episodeId: string) => {
   const { data } = await axios.get<EpisodePageResponse>(
-    `https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/${episodeId}/`);
+    `/api/wp-json/jovemnerd/v1/nerdcasts/${episodeId}/`);
   return data;
 }
 
