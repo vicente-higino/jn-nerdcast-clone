@@ -1,4 +1,4 @@
 import { EpisodePageResponse } from "./EpisodePageResponse";
-import { Post } from "./EpisodesFeedResponse";
+import { Podcast } from "./EpisodesFeedResponse";
 
-export type PostProps = EpisodePageResponse | Post;
+export type PostProps = Podcast;

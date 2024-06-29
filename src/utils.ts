@@ -8,7 +8,7 @@ export const formatDuration = (s: number) => {
   const hours = ((s - s % 3600) / 3600) % 60
   const minutes = ((s - s % 60) / 60) % 60
   if (hours > 0) {
-    return hours == 1 ? `${hours} hora e ${minutes} minutos` : `${hours} horas e ${minutes} minutos`;
+    return hours === 1 ? `${hours} hora e ${minutes} minutos` : `${hours} horas e ${minutes} minutos`;
   }
   return `${minutes} minutos`;
 }

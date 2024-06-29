@@ -47,10 +47,10 @@ export const Episode = () => {
 
   return (
     <div className="post">
-      <Post post={data} enableLink={false} >
+      {/* <Post post={data} enableLink={false} >
         {showSkipButton && <button className="skip-button" onClick={handleSkip}>Pular para {formatTime(skipTo.current)}</button>}
       </Post>
-      {data && <audio ref={audioRef} style={{ width: "100%" }} src={data.audio_high} controls />}
+      {data && <audio ref={audioRef} style={{ width: "100%" }} src={data.audio_high} controls />} */}
     </div>
   )
 }
